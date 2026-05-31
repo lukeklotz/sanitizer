@@ -1,3 +1,13 @@
+'''
+This program attempts to replace sensitive information with pseudonyms.
+It takes advantage of the spaCy library, which uses a local LLM to process text.
+spaCy is able to "label" and identify named entities in text by calling "label_".
+We take advantage of this with a key value pair dictionary called LABEL_TO_CATEGORY which
+contains the label name identified by spaCy as well as a value associated
+with the named entity. This value is used to generate a pseudonym for the 
+anonymized text.
+'''
+
 import string
 import spacy
 import argparse
