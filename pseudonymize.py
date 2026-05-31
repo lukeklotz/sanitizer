@@ -27,10 +27,10 @@ LABEL_TO_CATEGORY = {
 GENERALIZE_CATEGORIES = {"Money", "Date", "Location", "Time", "ID"}
 
 REGEX = [
-    (r'\$\d+(?:\.\d+)?[KkMmBb]?\b',              "Money"),
+    (r'\$\d+(?:\.\d+)?[KkMmBb]?\b', "Money"),
     (r'\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b',  "IP Address"),
-    (r'([Uu]sername is )(\S+)',                    "Username"),
-    (r'\b\d{6,}\b',                                "ID"),
+    (r'([Uu]sername is )(\S+)', "Username"),
+    (r'\b\d{6,}\b', "ID"),
 ]
 
 SAMPLE_INPUTS = [
@@ -146,13 +146,26 @@ def label_generator():
 
 
 class Pseudonymizer:
+    # load english tokensizer
+    # this class uses spacy to identify named entities
     def __init__(self, model="en_core_web_md"):
         self.spacy_model = spacy.load(model)
 
     def spacy_sanitize(self, text, mapping, gens):
         doc = self.spacy_model(text)
+
         spans = []
 
+        '''
+        uncomment here to see named entities
+        this is useful for adding to LABEL_TO_CATEGORY
+        for ent in doc.ents:
+            print(f"ent: {ent.text} type: {ent.label_}")
+        '''
+
+        #process named entities processed by spacy and
+        #create a mapping from names to pseudonuyms and
+        #a list of text spans to replace
         for entry in doc.ents:
             category = LABEL_TO_CATEGORY.get(entry.label_)
             if category is None:
@@ -162,6 +175,7 @@ class Pseudonymizer:
                 mapping[key] = f"{category} {next(gens[category])}"
             spans.append((entry.start_char, entry.end_char, mapping[key]))
 
+        # Splice replacements in from right to left so offsets stay valid.
         sanitized = text
         for start, end, pseudonym in sorted(spans, reverse=True):
             sanitized = sanitized[:start] + pseudonym + sanitized[end:]
