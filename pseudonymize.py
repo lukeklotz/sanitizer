@@ -13,13 +13,19 @@ anonymized text.
 import sys
 import string
 import spacy
+import argparse
 
 LABEL_TO_CATEGORY = {
     "PERSON": "Person",
-    "LOC": "Location",   
+    "LOC": "Location",
+    #"GPE": "Location",
+    #"FAC": "Location",
     "ORG": "Organization",
     "MONEY": "Money",
-    "DATE": "Date"
+    "DATE": "Date",
+    #"TIME": "Time",
+    #"CARDINAL": "Number",
+    #"ORDINAL": "Ordinal",
 }
 
 
@@ -120,19 +126,33 @@ SAMPLE_INPUTS = [
     "implications for my 2025 filing after moving states.",
 ]
 
+def print_result(label, before, after, similarity):
+    print(f"\n ------------- {label} ---------------")
+    print(f" ------ BEFORE: {before}")
+    print(f" ------ AFTER : {after}")
+    print(f" similarity score: {similarity}")
+
 
 def main():
+    parser = argparse.ArgumentParser(description="Pseudonymize sensitive text.")
+    parser.add_argument(
+        "-i", "--input",
+        type=str,
+        help="Custom text to sanitize. If omitted, runs against all sample inputs."
+    )
+    args = parser.parse_args()
+
     p = Pseudonymizer()
-    inputs = SAMPLE_INPUTS
 
-    for i, text in enumerate(inputs, 1):
-        sanitized, mapping = p.sanitize(text)
-        print(f"\n ------------- Input {i} ---------------")
-        print(f" ------ BEFORE: {text}")
-        print(f" ------ AFTER : {sanitized}")
-
-        similarity = p.similarity_score_text(text, sanitized)
-        print(f"similarity score: {similarity}")
+    if args.input:
+        sanitized, mapping = p.sanitize(args.input)
+        similarity = p.similarity_score_text(args.input, sanitized)
+        print_result("Custom Input", args.input, sanitized, similarity)
+    else:
+        for i, text in enumerate(SAMPLE_INPUTS, 1):
+            sanitized, mapping = p.sanitize(text)
+            similarity = p.similarity_score_text(text, sanitized)
+            print_result(f"Input {i}", text, sanitized, similarity)
 
 if __name__ == "__main__":
     main()
