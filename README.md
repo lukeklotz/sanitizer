@@ -1,8 +1,12 @@
 # how to run
 
-python -m spacy download en_core_web_md
+python3 -m venv .venv
 
-source venv/bin/activate
+source .venv/bin/activate
+
+pip install -r requirements.txt
+
+python -m spacy download en_core_web_md
 
 python3 pseudonymizer.py
 
