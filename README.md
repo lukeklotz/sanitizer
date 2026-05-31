@@ -21,7 +21,7 @@ python3 pseudonymizer.py
 
     "We are considering `Person A` for the Senior DevOps role. She currently makes `Money A` at `Organization A` and lives in `Location A.`"
 
-2.  Post-Generalization Hierarchy Map (Pass 3 Final):
+2.  Generalization Map (Pass 3 Final):
 
     "We are considering `Person A` for the Senior DevOps role. She currently makes `$100K-$200K` at `Organization A` and lives in `California`."
 
