@@ -8,7 +8,7 @@ pip install -r requirements.txt
 
 python -m spacy download en_core_web_md
 
-python3 pseudonymizer.py
+python3 pseudonymize.py
 
 # Workflow
 

@@ -30,6 +30,10 @@ REGEX = [
     (r'\$\d+(?:\.\d+)?[KkMmBb]?\b', "Money"),
     (r'\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b',  "IP Address"),
     (r'([Uu]sername is )(\S+)', "Username"),
+    # Street addresses, e.g. "45 Oakhaven Lane" — a direct identifier spaCy misses.
+    (r'\b\d+\s+[A-Z][A-Za-z]+(?:\s+[A-Z][A-Za-z]+)*\s+'
+     r'(?:Lane|Ln|Street|St|Avenue|Ave|Road|Rd|Boulevard|Blvd|'
+     r'Drive|Dr|Way|Court|Ct|Place|Pl|Circle|Cir|Terrace|Ter)\b', "Address"),
     (r'\b\d{6,}\b', "ID"),
 ]
 
